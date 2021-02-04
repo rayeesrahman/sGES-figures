@@ -1,5 +1,5 @@
-# Code for generating figures in "Protein structure-based gene expression signatures" 
-## Rahman, R et al. 2021, PNAS
+## Code for generating figures in "Protein structure-based gene expression signatures" 
+Rahman, R et al. 2021, PNAS
 
 ### Directories
 
@@ -17,7 +17,7 @@
 
 `figures/figure-7/` code for figures 7A-C 
 
-`figures/sfigures/` gcode for supplemental figures 1,5,7,18
+`figures/sfigures/` code for supplemental figures 1,5,7,18
 
 **All of the code references a `data/` directory** This is a directory that houses data used to generate figures. Due to the size of the generated data (>4GB), it is not included in this repo, but is available upon request. 
 
