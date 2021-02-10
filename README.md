@@ -6,7 +6,7 @@ To generate figures from the article you can run the scripts found in each direc
 
 Each script for each figure is standalone and can be run individually. However all scripts require the data directory in the figure directory to be populated. 
 
-There are a few utility scripts included in this repository to parese GTEx data or to create and train autoencoders in R. 
+There are a few utility scripts included in this repository to parse GTEx data or to create and train autoencoders in R. 
 
 This code has been validated to run on the following platforms: Ubuntu 20.04 LTS, Ubuntu 18.04 LTS and Windows Subsystem for linux. Your mileage may vary for other platforms. 
 
