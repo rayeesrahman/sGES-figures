@@ -934,110 +934,110 @@ gtex.x.archs$iter = NULL
 gtex.x.archs.no.outliers$iter = NULL
 
 
-###Figure 5E 
+###
 ##consistancy of overlap between archs and gtex before and after outlier removal 
 
-archs.outliers = read.table("archs.outliers.id.2sd.csv", sep =",")
+# archs.outliers = read.table("archs.outliers.id.2sd.csv", sep =",")
 
-##parse outliers 
-archs.gene250$SID = str_split_fixed(archs.gene250$SID, "-", 2)[,1]
-archs.gene250.n.outliers = archs.gene250[! archs.gene250$SID %in% archs.outliers$V1]
-archs.ss250.f.n.outliers = archs.ss250.f[! archs.ss250.f$SID %in% archs.outliers$V1]
-archs.ss250.sf.n.outliers = archs.ss250.sf[! archs.ss250.sf$SID %in% archs.outliers$V1 ]
-archs.ss250.fm.n.outliers = archs.ss250.fm[! archs.ss250.fm$SID %in% archs.outliers$V1]
-archs.ss250.d.n.outliers = archs.ss250.d[! archs.ss250.d$SID %in% archs.outliers$V1]
+# ##parse outliers 
+# archs.gene250$SID = str_split_fixed(archs.gene250$SID, "-", 2)[,1]
+# archs.gene250.n.outliers = archs.gene250[! archs.gene250$SID %in% archs.outliers$V1]
+# archs.ss250.f.n.outliers = archs.ss250.f[! archs.ss250.f$SID %in% archs.outliers$V1]
+# archs.ss250.sf.n.outliers = archs.ss250.sf[! archs.ss250.sf$SID %in% archs.outliers$V1 ]
+# archs.ss250.fm.n.outliers = archs.ss250.fm[! archs.ss250.fm$SID %in% archs.outliers$V1]
+# archs.ss250.d.n.outliers = archs.ss250.d[! archs.ss250.d$SID %in% archs.outliers$V1]
 
-archs.ss250.f.sp = split(archs.ss250.f, f= archs.ss250.f$`Tissue` )
-gtex.ss250.f.sp = split(gtex.ss250.f, f= gtex.ss250.f$`Tissue` )
-archs.ss250.sf.sp = split(archs.ss250.sf, f= archs.ss250.sf$`Tissue` )
-gtex.ss250.sf.sp = split(gtex.ss250.sf, f= gtex.ss250.sf$`Tissue` )
-archs.ss250.fm.sp = split(archs.ss250.fm, f= archs.ss250.fm$`Tissue` )
-gtex.ss250.fm.sp = split(gtex.ss250.fm, f= gtex.ss250.fm$`Tissue` )
-archs.ss250.d.sp = split(archs.ss250.d, f= archs.ss250.d$`Tissue` )
-gtex.ss250.d.sp = split(gtex.ss250.d, f= gtex.ss250.d$`Tissue` )
-archs.gene250.sp = split(archs.gene250, f= archs.gene250$`Tissue` )
-gtex.gene250.sp = split(gtex.gene250, f= gtex.gene250$`Tissue` )
+# archs.ss250.f.sp = split(archs.ss250.f, f= archs.ss250.f$`Tissue` )
+# gtex.ss250.f.sp = split(gtex.ss250.f, f= gtex.ss250.f$`Tissue` )
+# archs.ss250.sf.sp = split(archs.ss250.sf, f= archs.ss250.sf$`Tissue` )
+# gtex.ss250.sf.sp = split(gtex.ss250.sf, f= gtex.ss250.sf$`Tissue` )
+# archs.ss250.fm.sp = split(archs.ss250.fm, f= archs.ss250.fm$`Tissue` )
+# gtex.ss250.fm.sp = split(gtex.ss250.fm, f= gtex.ss250.fm$`Tissue` )
+# archs.ss250.d.sp = split(archs.ss250.d, f= archs.ss250.d$`Tissue` )
+# gtex.ss250.d.sp = split(gtex.ss250.d, f= gtex.ss250.d$`Tissue` )
+# archs.gene250.sp = split(archs.gene250, f= archs.gene250$`Tissue` )
+# gtex.gene250.sp = split(gtex.gene250, f= gtex.gene250$`Tissue` )
 
-archs.gene250.n.outliers.sp = split(archs.gene250.n.outliers , f= archs.gene250.n.outliers$`Tissue` )
-archs.ss250.f.n.outliers.sp = split(archs.ss250.f.n.outliers , f= archs.ss250.f.n.outliers$`Tissue` )
-archs.ss250.sf.n.outliers.sp = split(archs.ss250.sf.n.outliers , f= archs.ss250.sf.n.outliers$`Tissue` )
-archs.ss250.fm.n.outliers.sp = split(archs.ss250.fm.n.outliers , f= archs.ss250.fm.n.outliers$`Tissue` )
-archs.ss250.d.n.outliers.sp = split(archs.ss250.d.n.outliers , f= archs.ss250.d.n.outliers$`Tissue` )
+# archs.gene250.n.outliers.sp = split(archs.gene250.n.outliers , f= archs.gene250.n.outliers$`Tissue` )
+# archs.ss250.f.n.outliers.sp = split(archs.ss250.f.n.outliers , f= archs.ss250.f.n.outliers$`Tissue` )
+# archs.ss250.sf.n.outliers.sp = split(archs.ss250.sf.n.outliers , f= archs.ss250.sf.n.outliers$`Tissue` )
+# archs.ss250.fm.n.outliers.sp = split(archs.ss250.fm.n.outliers , f= archs.ss250.fm.n.outliers$`Tissue` )
+# archs.ss250.d.n.outliers.sp = split(archs.ss250.d.n.outliers , f= archs.ss250.d.n.outliers$`Tissue` )
 
-gtex.x.atchs.g = jc_gtex_X_archs(archs.gene250.sp  , gtex.gene250.sp)
-gtex.x.atchs.f = jc_gtex_X_archs(archs.ss250.f.sp  , gtex.ss250.f.sp)
-gtex.x.atchs.sf = jc_gtex_X_archs(archs.ss250.sf.sp  , gtex.ss250.sf.sp)
-gtex.x.atchs.fm = jc_gtex_X_archs(archs.ss250.fm.sp  , gtex.ss250.fm.sp)
-gtex.x.atchs.d = jc_gtex_X_archs(archs.ss250.d.sp  , gtex.ss250.d.sp)
+# gtex.x.atchs.g = jc_gtex_X_archs(archs.gene250.sp  , gtex.gene250.sp)
+# gtex.x.atchs.f = jc_gtex_X_archs(archs.ss250.f.sp  , gtex.ss250.f.sp)
+# gtex.x.atchs.sf = jc_gtex_X_archs(archs.ss250.sf.sp  , gtex.ss250.sf.sp)
+# gtex.x.atchs.fm = jc_gtex_X_archs(archs.ss250.fm.sp  , gtex.ss250.fm.sp)
+# gtex.x.atchs.d = jc_gtex_X_archs(archs.ss250.d.sp  , gtex.ss250.d.sp)
 
-gtex.x.atchs.g.n.out = jc_gtex_X_archs(archs.gene250.n.outliers.sp  , gtex.gene250.sp)
-gtex.x.atchs.f.n.out = jc_gtex_X_archs(archs.ss250.f.n.outliers.sp  , gtex.ss250.f.sp)
-gtex.x.atchs.sf.n.out = jc_gtex_X_archs(archs.ss250.sf.n.outliers.sp , gtex.ss250.sf.sp)
-gtex.x.atchs.fm.n.out = jc_gtex_X_archs(archs.ss250.fm.n.outliers.sp , gtex.ss250.fm.sp)
-gtex.x.atchs.d.n.out = jc_gtex_X_archs(archs.ss250.d.n.outliers.sp , gtex.ss250.d.sp)
-
-
-gtex.x.atchs.g$type = rep("gene", nrow(gtex.x.atchs.g))
-gtex.x.atchs.f$type = rep("fold", nrow(gtex.x.atchs.f))
-gtex.x.atchs.fm$type = rep("family", nrow(gtex.x.atchs.fm))
-gtex.x.atchs.sf$type = rep("superfamily", nrow(gtex.x.atchs.sf))
-gtex.x.atchs.d$type = rep("domain", nrow(gtex.x.atchs.d))
-
-gtex.x.atchs.g$type2 = rep("WithOutliers", nrow(gtex.x.atchs.g))
-gtex.x.atchs.f$type2 = rep("WithOutliers", nrow(gtex.x.atchs.f))
-gtex.x.atchs.fm$type2 = rep("WithOutliers", nrow(gtex.x.atchs.fm))
-gtex.x.atchs.sf$type2 = rep("WithOutliers", nrow(gtex.x.atchs.sf))
-gtex.x.atchs.d$type2 = rep("WithOutliers", nrow(gtex.x.atchs.d))
+# gtex.x.atchs.g.n.out = jc_gtex_X_archs(archs.gene250.n.outliers.sp  , gtex.gene250.sp)
+# gtex.x.atchs.f.n.out = jc_gtex_X_archs(archs.ss250.f.n.outliers.sp  , gtex.ss250.f.sp)
+# gtex.x.atchs.sf.n.out = jc_gtex_X_archs(archs.ss250.sf.n.outliers.sp , gtex.ss250.sf.sp)
+# gtex.x.atchs.fm.n.out = jc_gtex_X_archs(archs.ss250.fm.n.outliers.sp , gtex.ss250.fm.sp)
+# gtex.x.atchs.d.n.out = jc_gtex_X_archs(archs.ss250.d.n.outliers.sp , gtex.ss250.d.sp)
 
 
-gtex.x.atchs.g.n.out$type = rep("gene", nrow(gtex.x.atchs.g.n.out))
-gtex.x.atchs.f.n.out$type = rep("fold", nrow(gtex.x.atchs.f.n.out))
-gtex.x.atchs.sf.n.out$type = rep("superfamily", nrow(gtex.x.atchs.sf.n.out))
-gtex.x.atchs.fm.n.out$type = rep("family", nrow(gtex.x.atchs.fm.n.out))
-gtex.x.atchs.d.n.out$type = rep("domain", nrow(gtex.x.atchs.d.n.out))
+# gtex.x.atchs.g$type = rep("gene", nrow(gtex.x.atchs.g))
+# gtex.x.atchs.f$type = rep("fold", nrow(gtex.x.atchs.f))
+# gtex.x.atchs.fm$type = rep("family", nrow(gtex.x.atchs.fm))
+# gtex.x.atchs.sf$type = rep("superfamily", nrow(gtex.x.atchs.sf))
+# gtex.x.atchs.d$type = rep("domain", nrow(gtex.x.atchs.d))
 
-gtex.x.atchs.g.n.out$type2 = rep("WithoutOutliers", nrow(gtex.x.atchs.g.n.out))
-gtex.x.atchs.f.n.out$type2 = rep("WithoutOutliers", nrow(gtex.x.atchs.f.n.out))
-gtex.x.atchs.sf.n.out$type2 = rep("WithoutOutliers", nrow(gtex.x.atchs.sf.n.out))
-gtex.x.atchs.fm.n.out$type2 = rep("WithoutOutliers", nrow(gtex.x.atchs.fm.n.out))
-gtex.x.atchs.d.n.out$type2 = rep("WithoutOutliers", nrow(gtex.x.atchs.d.n.out))
+# gtex.x.atchs.g$type2 = rep("WithOutliers", nrow(gtex.x.atchs.g))
+# gtex.x.atchs.f$type2 = rep("WithOutliers", nrow(gtex.x.atchs.f))
+# gtex.x.atchs.fm$type2 = rep("WithOutliers", nrow(gtex.x.atchs.fm))
+# gtex.x.atchs.sf$type2 = rep("WithOutliers", nrow(gtex.x.atchs.sf))
+# gtex.x.atchs.d$type2 = rep("WithOutliers", nrow(gtex.x.atchs.d))
 
 
-df.final = rbind( gtex.x.atchs.g,
-                  gtex.x.atchs.d, 
-                  gtex.x.atchs.fm, 
-                  gtex.x.atchs.sf, 
-                  gtex.x.atchs.f,
-                  gtex.x.atchs.g.n.out,
-                  gtex.x.atchs.f.n.out,
-                  gtex.x.atchs.sf.n.out,
-                  gtex.x.atchs.fm.n.out,
-                  gtex.x.atchs.d.n.out )
+# gtex.x.atchs.g.n.out$type = rep("gene", nrow(gtex.x.atchs.g.n.out))
+# gtex.x.atchs.f.n.out$type = rep("fold", nrow(gtex.x.atchs.f.n.out))
+# gtex.x.atchs.sf.n.out$type = rep("superfamily", nrow(gtex.x.atchs.sf.n.out))
+# gtex.x.atchs.fm.n.out$type = rep("family", nrow(gtex.x.atchs.fm.n.out))
+# gtex.x.atchs.d.n.out$type = rep("domain", nrow(gtex.x.atchs.d.n.out))
 
-df.final = df.final[df.final$V1 %in% shared, ]
-df.final$distances = df.final$distances %>% as.character %>% as.numeric
-sel.tiss = c("Muscle", "WholeBlood")
-shared = unique(archs.ss250.f.n.outliers$Tissue)
-df.final.sel = df.final[df.final$V1 %in% sel.tiss,] 
-cl = list(WithoutOutliers = "#54B8A3", WithOutliers = "#2E2E2E")
-#cl = list( gene = "#51B7A1", domain = "#2274A5" , family = "#F75C03" , superfamily = "#00CB64" , fold = "#F5D34E"    )     
+# gtex.x.atchs.g.n.out$type2 = rep("WithoutOutliers", nrow(gtex.x.atchs.g.n.out))
+# gtex.x.atchs.f.n.out$type2 = rep("WithoutOutliers", nrow(gtex.x.atchs.f.n.out))
+# gtex.x.atchs.sf.n.out$type2 = rep("WithoutOutliers", nrow(gtex.x.atchs.sf.n.out))
+# gtex.x.atchs.fm.n.out$type2 = rep("WithoutOutliers", nrow(gtex.x.atchs.fm.n.out))
+# gtex.x.atchs.d.n.out$type2 = rep("WithoutOutliers", nrow(gtex.x.atchs.d.n.out))
 
-ggplot(df.final, 
-       aes(x = factor(type), 
-           y = as.numeric(distances), 
-           fill = factor(type2))) +
-    geom_hline(yintercept = .25 , color ="red", size = .75) + 
-    facet_wrap( ~V1 , scales = "free_x", ncol = 2 ) + 
-    geom_violin(aes(alpha = .5)) + 
-    scale_fill_manual(values = cl) + 
-    scale_x_discrete("Signature Type", limits = c("gene", "domain", "family", "superfamily", "fold")) + 
-    scale_y_continuous("Jaccard Coeficient") + 
-    theme_bw() + 
-    geom_vline(xintercept=c(1.5,2.5,3.5,4.5),color="grey20")+
-    theme(axis.title = element_blank(), 
-        axis.text = element_text(size = 15), legend.position = "none")
 
-ggsave(paste0("figures/S17-overlap-wo-outliers.png"), device =  "png", width = 8.5 , height = 11)
+# df.final = rbind( gtex.x.atchs.g,
+#                   gtex.x.atchs.d, 
+#                   gtex.x.atchs.fm, 
+#                   gtex.x.atchs.sf, 
+#                   gtex.x.atchs.f,
+#                   gtex.x.atchs.g.n.out,
+#                   gtex.x.atchs.f.n.out,
+#                   gtex.x.atchs.sf.n.out,
+#                   gtex.x.atchs.fm.n.out,
+#                   gtex.x.atchs.d.n.out )
+
+# df.final = df.final[df.final$V1 %in% shared, ]
+# df.final$distances = df.final$distances %>% as.character %>% as.numeric
+# sel.tiss = c("Muscle", "WholeBlood")
+# shared = unique(archs.ss250.f.n.outliers$Tissue)
+# df.final.sel = df.final[df.final$V1 %in% sel.tiss,] 
+# cl = list(WithoutOutliers = "#54B8A3", WithOutliers = "#2E2E2E")
+# #cl = list( gene = "#51B7A1", domain = "#2274A5" , family = "#F75C03" , superfamily = "#00CB64" , fold = "#F5D34E"    )     
+
+# ggplot(df.final, 
+#        aes(x = factor(type), 
+#            y = as.numeric(distances), 
+#            fill = factor(type2))) +
+#     geom_hline(yintercept = .25 , color ="red", size = .75) + 
+#     facet_wrap( ~V1 , scales = "free_x", ncol = 2 ) + 
+#     geom_violin(aes(alpha = .5)) + 
+#     scale_fill_manual(values = cl) + 
+#     scale_x_discrete("Signature Type", limits = c("gene", "domain", "family", "superfamily", "fold")) + 
+#     scale_y_continuous("Jaccard Coeficient") + 
+#     theme_bw() + 
+#     geom_vline(xintercept=c(1.5,2.5,3.5,4.5),color="grey20")+
+#     theme(axis.title = element_blank(), 
+#         axis.text = element_text(size = 15), legend.position = "none")
+
+# ggsave(paste0("figures/S17-overlap-wo-outliers.png"), device =  "png", width = 8.5 , height = 11)
 
 
 
