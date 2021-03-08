@@ -545,6 +545,7 @@ gtex.gene250.sp = split(gtex.gene250, f= gtex.gene250$`Tissue` )
 archs.df.250 = compute_jaccard(archs.gene250.sp)
 archs.df.no.outlier.250 = compute_jaccard(archs.gene250.no.outliers.sp)
 archs.df.no.outlier.250$type = rep("ARCHS4 without outliers", nrow(archs.df.no.outlier.250))
+archs.df.250$type = rep("ARCHS4 with outliers", nrow(archs.df.250))
 df.final = rbind( archs.df.250, archs.df.no.outlier.250)
 #write.table(df.final, file = "Jc-gtex-archs-pairwise-comparisons.csv", sep = ",", row.names = F, col.names = T, quote = F)
 
@@ -573,18 +574,86 @@ ggplot(df.final,
           axis.text.x = element_blank() 
           )
 
-gtex.x.archs = jc_gtex_X_archs(gtex.gene250.sp , archs.gene250.sp)
-gtex.x.archs.no.outliers = jc_gtex_X_archs(gtex.gene250.sp , archs.gene250.no.outliers.sp)
-gtex.x.archs$type = rep("GTEX X ACRCHS4 with outliers", nrow(gtex.x.archs))
-gtex.x.archs.no.outliers$type = rep("GTEX X ACRCHS4 without outliers", nrow(gtex.x.archs.no.outliers))
-gtex.x.archs$iter = NULL
-gtex.x.archs.no.outliers$iter = NULL
+# gtex.x.archs = jc_gtex_X_archs(gtex.gene250.sp , archs.gene250.sp)
+# gtex.x.archs.no.outliers = jc_gtex_X_archs(gtex.gene250.sp , archs.gene250.no.outliers.sp)
+# gtex.x.archs$type = rep("GTEX X ACRCHS4 with outliers", nrow(gtex.x.archs))
+# gtex.x.archs.no.outliers$type = rep("GTEX X ACRCHS4 without outliers", nrow(gtex.x.archs.no.outliers))
+# gtex.x.archs$iter = NULL
+# gtex.x.archs.no.outliers$iter = NULL
 
 
 ###Figure 6E 
 ##consistancy of overlap between archs and gtex before and after outlier removal 
 
 archs.outliers = read.table("archs.outliers.id.2sd.csv", sep =",")
+
+gtex.ss250.f = fread("figures/data/gtex/structural-signatures/allcombined.gtex.250.fold.csv", header = F , stringsAsFactors = F)
+archs.ss250.f = fread("figures/data/archs/structural-signatures/allcombined.archs.250.fold.csv", header = F , stringsAsFactors = F)
+
+gtex.ss250.sf = fread("figures/data/gtex/structural-signatures/allcombined.gtex.250.superfam.csv", header = F , stringsAsFactors = F)
+archs.ss250.sf = fread("figures/data/archs/structural-signatures/allcombined.archs.250.superfam.csv", header = F , stringsAsFactors = F)
+
+gtex.ss250.fm = fread("figures/data/gtex/structural-signatures/allcombined.gtex.250.family.csv", header = F , stringsAsFactors = F)
+archs.ss250.fm = fread("figures/data/archs/structural-signatures/allcombined.archs.250.family.csv", header = F , stringsAsFactors = F)
+
+gtex.ss250.d = fread("figures/data/gtex/structural-signatures/allcombined.gtex.250.domain.csv", header = F , stringsAsFactors = F)
+archs.ss250.d = fread("figures/data/archs/structural-signatures/allcombined.archs.250.domain.csv", header = F , stringsAsFactors = F)
+
+
+gtex.meta.f = str_split_fixed(gtex.ss250.f$V10, "\\.", 2) %>% as.data.frame
+gtex.meta.f$V1 = str_split_fixed(gtex.meta.f$V1, "\\-", 2)[,1]
+gtex.meta.sf = str_split_fixed(gtex.ss250.sf$V10, "\\.", 2) %>% as.data.frame
+gtex.meta.sf$V1 = str_split_fixed(gtex.meta.sf$V1, "\\-", 2)[,1]
+gtex.meta.fm = str_split_fixed(gtex.ss250.fm$V10, "\\.", 2) %>% as.data.frame
+gtex.meta.fm$V1 = str_split_fixed(gtex.meta.fm$V1, "\\-", 2)[,1]
+gtex.meta.d = str_split_fixed(gtex.ss250.d$V10, "\\.", 2) %>% as.data.frame
+gtex.meta.d$V1 = str_split_fixed(gtex.meta.d$V1, "\\-", 2)[,1]
+
+gtex.ss250.f$V10 = gtex.meta$V2
+gtex.ss250.f$V11 = gtex.meta$V1
+gtex.ss250.sf$V10 = gtex.meta.sf$V2
+gtex.ss250.sf$V11 = gtex.meta.sf$V1
+gtex.ss250.fm$V10 = gtex.meta.fm$V2
+gtex.ss250.fm$V11 = gtex.meta.fm$V1
+gtex.ss250.d$V10 = gtex.meta.d$V2
+gtex.ss250.d$V11 = gtex.meta.d$V1
+
+gtex.ss250.f = gtex.ss250.f[,c(10,11,1)]
+archs.ss250.f = archs.ss250.f[,c(10,11,1)]
+gtex.ss250.sf = gtex.ss250.sf[,c(10,11,1)]
+archs.ss250.sf = archs.ss250.sf[,c(10,11,1)]
+gtex.ss250.fm = gtex.ss250.fm[,c(10,11,1)]
+archs.ss250.fm = archs.ss250.fm[,c(10,11,1)]
+gtex.ss250.d = gtex.ss250.d[,c(10,11,1)]
+archs.ss250.d = archs.ss250.d[,c(10,11,1)]
+
+
+gtex.ss250.f$rank = rep(1, nrow(gtex.ss250.f))
+archs.ss250.f$rank = rep(1, nrow(archs.ss250.f))
+gtex.ss250.sf$rank = rep(1, nrow(gtex.ss250.sf))
+archs.ss250.sf$rank = rep(1, nrow(archs.ss250.sf))
+gtex.ss250.fm$rank = rep(1, nrow(gtex.ss250.fm))
+archs.ss250.fm$rank = rep(1, nrow(archs.ss250.fm))
+gtex.ss250.d$rank = rep(1, nrow(gtex.ss250.d))
+archs.ss250.d$rank = rep(1, nrow(archs.ss250.d))
+
+gtex.ss250.f$size = rep(250, nrow(gtex.ss250.f))
+archs.ss250.f$size = rep(250, nrow(archs.ss250.f))
+gtex.ss250.sf$size = rep(250, nrow(gtex.ss250.sf))
+archs.ss250.sf$size = rep(250, nrow(archs.ss250.sf))
+gtex.ss250.fm$size = rep(250, nrow(gtex.ss250.fm))
+archs.ss250.fm$size = rep(250, nrow(archs.ss250.fm))
+gtex.ss250.d$size = rep(250, nrow(gtex.ss250.d))
+archs.ss250.d$size = rep(250, nrow(archs.ss250.d))
+
+names(gtex.ss250.f) = c("SID", "Tissue", "Gene", "Rank", "size")
+names(archs.ss250.f) = c("SID", "Tissue", "Gene", "Rank", "size")
+names(gtex.ss250.sf) = c("SID", "Tissue", "Gene", "Rank", "size")
+names(archs.ss250.sf) = c("SID", "Tissue", "Gene", "Rank", "size")
+names(gtex.ss250.fm) = c("SID", "Tissue", "Gene", "Rank", "size")
+names(archs.ss250.fm) = c("SID", "Tissue", "Gene", "Rank", "size")
+names(gtex.ss250.d) = c("SID", "Tissue", "Gene", "Rank", "size")
+names(archs.ss250.d) = c("SID", "Tissue", "Gene", "Rank", "size")
 
 ##parse outliers 
 archs.gene250$SID = str_split_fixed(archs.gene250$SID, "-", 2)[,1]
@@ -610,6 +679,45 @@ archs.ss250.f.n.outliers.sp = split(archs.ss250.f.n.outliers , f= archs.ss250.f.
 archs.ss250.sf.n.outliers.sp = split(archs.ss250.sf.n.outliers , f= archs.ss250.sf.n.outliers$`Tissue` )
 archs.ss250.fm.n.outliers.sp = split(archs.ss250.fm.n.outliers , f= archs.ss250.fm.n.outliers$`Tissue` )
 archs.ss250.d.n.outliers.sp = split(archs.ss250.d.n.outliers , f= archs.ss250.d.n.outliers$`Tissue` )
+### overlap calc 
+
+
+jc_gtex_X_archs = function(gtex.sp , archs.sp )
+{
+  gtex.n = names(gtex.sp)
+  archs.n = names(archs.sp)
+  shared = gtex.n[which(gtex.n %in% archs.n)]
+  df.final = data.frame()
+  for (tiss in shared ) 
+  {
+    print(paste0("working on ", tiss))
+    gtex.t = gtex.sp[[tiss]]
+    archs.t = archs.sp[[tiss]]
+    gtex.t$val = rep(1, nrow(gtex.t))
+    archs.t$val = rep(1, nrow(archs.t))
+    gtex.t = gtex.t[,c("SID", "Gene", "size", "val")]
+    archs.t = archs.t[,c("SID", "Gene", "size", "val")]
+    total = rbind(gtex.t, archs.t)
+    gtex.sid = gtex.t$SID %>% unique 
+    archs.sid = archs.t$SID %>% unique 
+    total.wide = spread(data = total, key = Gene ,  value = val,  fill = 0 ) %>%  as.data.frame()    
+    row.names(total.wide) = total.wide$SID 
+    total.wide$SID = NULL
+    size = total.wide$size %>% unique 
+    total.wide$size = NULL
+    total.dist = vegdist(data.matrix(total.wide), method = "jaccard", binary = T ,
+                         upper = T, diag = T )  %>%  data.matrix() %>%  as.data.frame() 
+    distances = total.dist[row.names(total.dist) %in% gtex.sid , names(total.dist) %in% archs.sid ] %>% as.matrix %>% as.numeric
+    distances = 1 - distances  
+    df.return = data.frame()
+    df.return = cbind(rep(tiss, length(distances)), distances) %>%  as.data.frame()
+    df.return$size = rep(size , nrow(df.return))
+    df.return$tissue = rep(tiss, nrow(df.return))
+    df.return$iter = rep(1 , nrow(df.return))
+    df.final = rbind(df.final, df.return)    
+  }
+  return(df.final)
+}
 
 gtex.x.atchs.g = jc_gtex_X_archs(archs.gene250.sp  , gtex.gene250.sp)
 gtex.x.atchs.f = jc_gtex_X_archs(archs.ss250.f.sp  , gtex.ss250.f.sp)
