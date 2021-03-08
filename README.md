@@ -12,7 +12,41 @@ This code has been validated to run on the following platforms: Ubuntu 20.04 LTS
 
 ### Data directory 
 
-**All of the code references a `data/` directory** This is a directory that houses data used to generate figures. Due to the size of the generated data (>4GB), it is not included in this repo, but is available upon request. 
+**All of the code references a `figures/data/` directory** This is a directory that houses data used to generate figures. 
+
+Due to the size of the generated data (>4GB), it is not included in this repo, but is available to download from here: http://iyengarlab.org/dtoxs/PNAS-sGES.tar.bz2 
+
+Please extract the files and place folder into `figures/data/`. The directory structure should be as follows: 
+``` 
+data/
+├── TISSUES-harmonizome
+│   ├── inte-gl
+│   ├── results
+│   └── rna-gl
+├── archs
+│   ├── ARCHS4_r
+│   ├── embeddings
+│   └── structural-signatures
+│       └── formatted
+├── dtox
+├── gtex
+│   ├── stable_signature_data
+│   │   ├── selected_gene_lists
+│   │   └── stable_signature_data_old
+│   └── structural-signatures
+├── humanprotatlas
+│   ├── genelists
+│   ├── raw
+│   └── results
+├── l1000
+├── msigdb
+│   ├── genelists
+│   ├── raw-gmt
+│   └── results
+│       └── ss_output
+├── reconstruction_errors
+└── rocs
+```
 
 ### Directories
 
@@ -30,11 +64,11 @@ This code has been validated to run on the following platforms: Ubuntu 20.04 LTS
 
 `figures/figure-7/` code for figures 7A-C 
 
-`figures/sfigures/` code for supplemental figures 1,5,7,18
-
 `scripts/autoencoder` scripts to train autoencoder models and output reconstruction errors for test data from GES or sGES data
 
 `utilities/` simple shell scripts to run strucutural signatures on GTEX and ARCHS4 data  
+
+`figures/data` generated data that is analyzed by the scripts 
 
 
 ### Dependancies 
@@ -102,3 +136,7 @@ Use the following code to install the R dependancies. Python tensorflow will als
 `if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")` 
 
 `BiocManager::install("rhdf5", "iheatmapr")`  
+
+#### Contact 
+
+For any issues relating to this repository contact the corresponding authors: rayees(dot)rahman(at)icahn(dot)mssm(dot)edu or avner(dot)schlessinger(at)mssm(dot)edu 
