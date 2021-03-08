@@ -75,7 +75,10 @@ cl = c(
        "#887191","#be6400","#82cafc","#1fa774","#8cffdb","#7bb274","#510ac9","#ff5b00"
     )
 
-domain = fread( "figures/data/dtox/top250_down_fold_combined.csv", sep = ",", header = F)
+###change file to get up or downregulated folds for generating figures 7A-C 
+##"figures/data/dtox/top250_up_fold_combined.csv" for up regulated 
+## figures/data/dtox/top250_up_down_combined.csv for down regulated
+domain = fread( "figures/data/dtox/top250_up_fold_combined.csv", sep = ",", header = F)
 names(domain) = header 
 
 domain.2 = domain[,c("Structure", "logfoldchange", "SID")]
@@ -84,6 +87,7 @@ x.wide.meta = str_split_fixed(x.wide$SID, '\\.', 5) %>% as.data.frame
 x.wide$cell = x.wide.meta$V2
 x.wide$plate = x.wide.meta$V4
 x.wide$nib = x.wide.meta$V5
+
 
 library(iheatmapr)
 
@@ -157,41 +161,14 @@ drug_cate = list(
 )
 
 x.wide= x.wide[which(x.wide$nib %in% selecteddrugs) , ]
-x.wide$nib = factor(x.wide$nib)
-maxcol = ncol(x.wide) - 3
-x.wide.2 = x.wide[,which(apply(x.wide[,2:maxcol], 2, function(x) {sum(x)}) %>% as.numeric() !=  0 ) + 1 ]
-x.wide.dat = x.wide.2[,which(apply(x.wide.2[,2:ncol(x.wide.2)], 2, function(x) {min(x)}) %>% as.numeric() >=  0 ) + 1 ]
-maxcol2 = ncol(x.wide.dat)
-x.wide.dat$nib = x.wide$nib 
-x.wide.dat$plate = x.wide$plate
-x.wide.dat$cell = x.wide$cell 
-x.wide.dat$drug_cat = as.factor(as.character(unlist(drug_cate[as.character(x.wide.dat$nib)]  ) ))
-main_heatmap(data.matrix(x.wide.dat[,2:maxcol2]), name = "Log Fold Change") %>%
-  add_col_clustering() %>%
-  add_row_clustering() %>%
-  add_row_title("Folds") %>%
-  add_col_title("Sample") %>%
-  add_row_annotation(data.frame(
-      "Drug Category" = x.wide.dat$drug_cat, 
-      "Drug" =  x.wide.dat$nib) )  #%>%
-  add_row_labels(x.wide.dat$nib) #%>%
-  add_row_annotation() #%>%
-  add_row_annotation(x.wide.dat$cell) #%>%
-  
-  
-  add_main_heatmap(Indometh_matrix,
-                   name = "Indometacin<br>Concentration") %>%
-  
-  add_col_title("Time") %>%
-  add_col_summary()
 
-
-
+x.wide.meta = x.wide.meta[which(x.wide.meta$V5 %in% selecteddrugs), ]
 x.tsne  = Rtsne(x.wide, dims = 3, perplexity = 15, verbose = T )
 x.tsne.y = x.tsne$Y %>% as.data.frame
 x.tsne.y = cbind(x.tsne.y , x.wide.meta)
-
-names(x.tsne.y) = c("TSNE1", "TSNE2", "TSNE3", "DRUG", "CELL", "ID", "TYPE")
+ 
+###figure 7A 
+names(x.tsne.y) = c("TSNE1", "TSNE2", "TSNE3", "Human", "CELL", "ID", "TYPE", "DRUG")
 plot_ly(x.tsne.y, 
         x = as.numeric(x.tsne.y$TSNE1),
         y = as.numeric(x.tsne.y$TSNE2), 
@@ -211,101 +188,126 @@ plot_ly(x.tsne.y,
             showlegend = T
         )
 
+###figure 7B
+
+x.wide$nib = factor(x.wide$nib)
+maxcol = ncol(x.wide) - 3
+x.wide.2 = x.wide[,which(apply(x.wide[,2:maxcol], 2, function(x) {sum(x)}) %>% as.numeric() !=  0 ) + 1 ]
+x.wide.dat = x.wide.2[,which(apply(x.wide.2[,2:ncol(x.wide.2)], 2, function(x) {min(x)}) %>% as.numeric() >=  0 ) + 1 ]
+maxcol2 = ncol(x.wide.dat)
+x.wide.dat$nib = x.wide$nib 
+x.wide.dat$plate = x.wide$plate
+x.wide.dat$cell = x.wide$cell 
+x.wide.dat$drug_cat = as.factor(as.character(unlist(drug_cate[as.character(x.wide.dat$nib)]  ) ))
+main_heatmap(data.matrix(x.wide.dat[,2:maxcol2]), name = "Log Fold Change") %>%
+  add_col_clustering() %>%
+  add_row_clustering() %>%
+  add_row_title("Folds") %>%
+  add_col_title("Sample") %>%
+  add_row_annotation(data.frame(
+      "Drug Category" = x.wide.dat$drug_cat, 
+      "Drug" =  x.wide.dat$nib) )  #%>%
+  add_row_labels(x.wide.dat$nib) #%>%
+  add_row_annotation() #%>%
+  add_row_annotation(x.wide.dat$cell) #%>%  
+  add_col_title("Time") %>%
+  add_col_summary()
+
 
 ######################################################################################
 ######################################################################################
 ## ## ## ## ## ## ## ## ## ## ## ## ## 
 
 
-selecteddrugs = c(
-    "regorafenib",
-    "sorafenib",
-    "Doxorubicin",
-    "epirubicin",
-    "idarubicin"
-)
+# selecteddrugs = c(
+#     "regorafenib",
+#     "sorafenib",
+#     "Doxorubicin",
+#     "epirubicin",
+#     "idarubicin"
+# )
 
 
-fold.down = fold.down[which(fold.down$drug %in% selecteddrugs) , ]
-#fold.up = fold.up[pvalue< .05]
-#fold.down = fold.down[pvalue< .05]
-library(gplots)
-fold.up = fold.up[,c("SID", "structure", "pvalue", "drug")] 
-fold.down = fold.down[,c("SID", "structure", "log_fold_change", "drug")] 
-fold.u.w = spread(fold.up, structure, pvalue, fill = 0  ) %>% as.data.frame()
-fold.d.w = spread(fold.down, structure, log_fold_change, fill = 0  ) %>% as.data.frame()
-#row.names(fold.u.w) = fold.u.w$SID 
-#row.names(fold.d.w) = fold.d.w$SID
-fold.d.w$SID = NULL 
-fold.u.w$SID = NULL
-f.u.w.drug = fold.u.w$drug
-f.d.w.drug = fold.d.w$drug
-fold.u.w$drug = NULL
-fold.d.w$drug = NULL
-library(RColorBrewer)
-Colors=c("#440154FF","#3CBB75FF","#FDE725FF")
-Colors=rev(brewer.pal(11,"Spectral"))
-Colors=colorRampPalette(Colors)(100)
-col1 <- colorRampPalette(Colors)(15)
-library(iheatmapr)
-cl3 = c(
-    "#8cffdb", "#7bb274", "#510ac9", "#ff5b00",
-        "#fffe7a" , "#0a888a",  "#887191" , "#c04e01" , "#95d0fc", "#40a368" ,
-        "#53fca1" , "#c04e01" , "#3f9b0b" ,"#580f41" ,  "#b9a281", "#ff474c", 
-        "#7e1e9c","#0343df","#95d0fc","#f97306","#029386" ,"#c20078"
-        ) 
-main_heatmap(data.matrix((fold.u.w)), name = "Log10 Fold Change",) %>%
-    add_row_annotation(data.frame("Drugs" = as.character(f.u.w.drug )) ,
-                        colors = list("Drugs" = cl3)) %>%
-    add_col_clustering()  %>%
-    add_row_clustering() %>% 
-    add_row_title("Drugs") %>%
-    add_col_title("Folds") #%>%
+# fold.down = fold.down[which(fold.down$drug %in% selecteddrugs) , ]
+# #fold.up = fold.up[pvalue< .05]
+# #fold.down = fold.down[pvalue< .05]
+# library(gplots)
+# fold.up = fold.up[,c("SID", "structure", "pvalue", "drug")] 
+# fold.down = fold.down[,c("SID", "structure", "log_fold_change", "drug")] 
+# fold.u.w = spread(fold.up, structure, pvalue, fill = 0  ) %>% as.data.frame()
+# fold.d.w = spread(fold.down, structure, log_fold_change, fill = 0  ) %>% as.data.frame()
+# #row.names(fold.u.w) = fold.u.w$SID 
+# #row.names(fold.d.w) = fold.d.w$SID
+# fold.d.w$SID = NULL 
+# fold.u.w$SID = NULL
+# f.u.w.drug = fold.u.w$drug
+# f.d.w.drug = fold.d.w$drug
+# fold.u.w$drug = NULL
+# fold.d.w$drug = NULL
+# library(RColorBrewer)
+# Colors=c("#440154FF","#3CBB75FF","#FDE725FF")
+# Colors=rev(brewer.pal(11,"Spectral"))
+# Colors=colorRampPalette(Colors)(100)
+# col1 <- colorRampPalette(Colors)(15)
+# library(iheatmapr)
+# cl3 = c(
+#     "#8cffdb", "#7bb274", "#510ac9", "#ff5b00",
+#         "#fffe7a" , "#0a888a",  "#887191" , "#c04e01" , "#95d0fc", "#40a368" ,
+#         "#53fca1" , "#c04e01" , "#3f9b0b" ,"#580f41" ,  "#b9a281", "#ff474c", 
+#         "#7e1e9c","#0343df","#95d0fc","#f97306","#029386" ,"#c20078"
+#         ) 
+# main_heatmap(data.matrix((fold.u.w)), name = "Log10 Fold Change",) %>%
+#     add_row_annotation(data.frame("Drugs" = as.character(f.u.w.drug )) ,
+#                         colors = list("Drugs" = cl3)) %>%
+#     add_col_clustering()  %>%
+#     add_row_clustering() %>% 
+#     add_row_title("Drugs") %>%
+#     add_col_title("Folds") #%>%
     
-heatmap.2(data.matrix((fold.u.w)), trace = "none",col=Colors, labCol =NA,  margins=c(3,15),  
-          RowSideColors=col1[as.numeric(as.factor(f.u.w.drug))], labRow = f.u.w.drug, cexRow = 2, keysize =1 )
+# heatmap.2(data.matrix((fold.u.w)), trace = "none",col=Colors, labCol =NA,  margins=c(3,15),  
+#           RowSideColors=col1[as.numeric(as.factor(f.u.w.drug))], labRow = f.u.w.drug, cexRow = 2, keysize =1 )
 
-heatmap.2(data.matrix((fold.d.w)), trace = "none",col=Colors, labCol =NA,  margins=c(3,15),  
-          RowSideColors=col1[as.numeric(as.factor(f.d.w.drug))], labRow = f.d.w.drug, cexRow = 2, keysize =1 )
-library(ggplot2)
-library(ggdendro)
-library(plotly)
-dd.col <- as.dendrogram(hclust(dist(fold.u.w)))
-dd.row <- as.dendrogram(hclust(dist(t(fold.u.w))))
-dx <- dendro_data(dd.row)
-dy <- dendro_data(dd.col)
-ggdend <- function(df) {
-    ggplot() +
-        geom_segment(data = df, aes(x=x, y=y, xend=xend, yend=yend)) +
-        labs(x = "", y = "") + theme_minimal() +
-        theme(axis.text = element_blank(), axis.ticks = element_blank(),
-              panel.grid = element_blank())
-}
-px <- ggdend(dx$segments)
-py <- ggdend(dy$segments) + coord_flip()
-col.ord <- order.dendrogram(dd.col)
-row.ord <- order.dendrogram(dd.row)
-xx = fold.u.w[col.ord, row.ord]
-xx$name = row.names(xx) 
-xx$name <- with(xx, factor(name, levels=name, ordered=TRUE))
-mdf <- reshape2::melt(xx, id.vars="name")
-
-
-p <- ggplot(mdf, aes(x = variable, y = name)) + geom_tile(aes(fill = value)) 
-eaxis <- list(
-    showticklabels = FALSE,
-    showgrid = FALSE,
-    zeroline = FALSE
-)
-ggplotly(p) %>%
-    # note that margin applies to entire plot, so we can
-    # add it here to make tick labels more readable
-    layout(margin = list(l = 200))
-subplot(px, p_empty, p, py, nrows = 2, margin = 0.01)
+# heatmap.2(data.matrix((fold.d.w)), trace = "none",col=Colors, labCol =NA,  margins=c(3,15),  
+#           RowSideColors=col1[as.numeric(as.factor(f.d.w.drug))], labRow = f.d.w.drug, cexRow = 2, keysize =1 )
+# library(ggplot2)
+# library(ggdendro)
+# library(plotly)
+# dd.col <- as.dendrogram(hclust(dist(fold.u.w)))
+# dd.row <- as.dendrogram(hclust(dist(t(fold.u.w))))
+# dx <- dendro_data(dd.row)
+# dy <- dendro_data(dd.col)
+# ggdend <- function(df) {
+#     ggplot() +
+#         geom_segment(data = df, aes(x=x, y=y, xend=xend, yend=yend)) +
+#         labs(x = "", y = "") + theme_minimal() +
+#         theme(axis.text = element_blank(), axis.ticks = element_blank(),
+#               panel.grid = element_blank())
+# }
+# px <- ggdend(dx$segments)
+# py <- ggdend(dy$segments) + coord_flip()
+# col.ord <- order.dendrogram(dd.col)
+# row.ord <- order.dendrogram(dd.row)
+# xx = fold.u.w[col.ord, row.ord]
+# xx$name = row.names(xx) 
+# xx$name <- with(xx, factor(name, levels=name, ordered=TRUE))
+# mdf <- reshape2::melt(xx, id.vars="name")
 
 
-p <- plot_ly(
-    x = c("a", "b", "c"), y = c("d", "e", "f"),
-    z = m, type = "heatmap"
-)
+# p <- ggplot(mdf, aes(x = variable, y = name)) + geom_tile(aes(fill = value)) 
+# eaxis <- list(
+#     showticklabels = FALSE,
+#     showgrid = FALSE,
+#     zeroline = FALSE
+# )
+# ggplotly(p) %>%
+#     # note that margin applies to entire plot, so we can
+#     # add it here to make tick labels more readable
+#     layout(margin = list(l = 200))
+# subplot(px, p_empty, p, py, nrows = 2, margin = 0.01)
+
+
+# p <- plot_ly(
+#     x = c("a", "b", "c"), y = c("d", "e", "f"),
+#     z = m, type = "heatmap"
+# )
 
