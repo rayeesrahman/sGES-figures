@@ -131,7 +131,7 @@ Keras
 
 Use the following code to install the R dependancies. Python tensorflow will also be installed during the installation of the repsective R versions 
 
-`library("tools","BBmisc","RColorBrewer","Rtsne","data.table","dplyr","ggdendro","ggplot2","gplots","grid","gridExtra","keras","magrittr","pROC","plotly","plyr","ranger",,"stringr","tidyr","tidyverse","vegan")`
+`install.packages(c("tools","BBmisc","RColorBrewer","Rtsne","data.table","dplyr","ggdendro","ggplot2","gplots","grid","gridExtra","keras","magrittr","pROC","plotly","plyr","ranger",,"stringr","tidyr","tidyverse","vegan"))`
 
 `if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")` 
 
