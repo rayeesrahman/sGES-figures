@@ -83,8 +83,8 @@ getroc_data = function(x, type  )
         co = coords(roc.dat, "all", ret = c("recall", "precision"), transpose = T) %>% as.data.frame
         names(co) = c(1:ncol(co))
         co = data.frame(t(co))
-        df.to.return$recall = co$recall 
-        df.to.return$precision = co$precision
+        #df.to.return$recall = co$recall 
+        #df.to.return$precision = co$precision
         df.to.return = df.to.return[complete.cases(df.to.return),] %>% as.data.frame
         df = rbind(df, df.to.return)
     }
